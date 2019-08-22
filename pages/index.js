@@ -8,7 +8,10 @@ class HomaPage extends Component {
 
   state = {
     tokenName: '',
-    tokenSymbol: ''
+    tokenSymbol: '',
+    addressFrom: '',
+    addressTo: '',
+    tokens: ''
   };
 
   async componentWillMount() {
@@ -28,40 +31,28 @@ class HomaPage extends Component {
     alert(`Your token symbol is ${this.state.tokenSymbol}`);
   };
 
+  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+
   render() {
     return (
       <Layout>
         <div>
           <h2>Home Page</h2>
         </div>
-        <Button onClick={this.getTokenName}>Get Token Name</Button>
-        <Button onClick={this.getTokenSymbol}>Get Token Symbol</Button>
         <Form>
-          <Form.Group widths='equal'>
-              <Form.Field
-                id='form-input-control-first-name'
-                control={Input}
-                label='First name'
-                placeholder='First name'
-              />
-              <Form.Field
-                id='form-input-control-last-name'
-                control={Input}
-                label='Last name'
-                placeholder='Last name'
-              />
-              <Form.Field
-                id='form-input-control-last-name'
-                control={Input}
-                label='Last name'
-                placeholder='Last name'
-              />
-              <Form.Field
-                id='form-input-control-last-name'
-                control={Button}
-              />
-            </Form.Group>
+          <Button onClick={this.getTokenName}>Get Token Name</Button>
+          <Button onClick={this.getTokenSymbol}>Get Token Symbol</Button>
         </Form>
+        <Form onSubmit={this.submitTransferFrom}>
+          <Form.Group>
+            <Form.Input label='Address From' placeholder='Address From'  onChange={this.handleChange} />
+            <Form.Input label='Address to' placeholder='Address to' onChange={this.handleChange} />
+            <Form.Input label='Tokens' placeholder='Tokens' onChange={this.handleChange} />
+            <Form.Button label='transferFrom()' content='Submit' secondary />
+          </Form.Group>
+        </Form>
+
+
       </Layout>
     );
   }
