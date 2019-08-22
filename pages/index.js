@@ -176,21 +176,25 @@ class HomaPage extends Component {
               label='Token owner address' 
               placeholder='Token owner address'  
               value={allowance.tokenOwnerAddress}
-              onChange={event => this.setState(prevState => {
+              onChange={event => {
+                let value = event.target.value;
+                this.setState(prevState => {
                 let allowance = Object.assign({}, prevState.allowance);
-                allowance.tokenOwnerAddress = event.target.value;        
+                allowance.tokenOwnerAddress = value;        
                 return { allowance };
-              })} 
+              })}} 
             />
             <Form.Input 
               label='Spender address' 
               placeholder='Spender address' 
               value={allowance.spenderAddress}
-              onChange={event => this.setState(prevState => {
+              onChange={event => {
+                let value = event.target.value;
+                this.setState(prevState => {
                 let allowance = Object.assign({}, prevState.allowance);
-                allowance.spenderAddress = event.target.value;              
+                allowance.spenderAddress = value;              
                 return { allowance };
-              })}
+              })}}
             />
           </Form.Group>
         </Form>
@@ -202,12 +206,11 @@ class HomaPage extends Component {
               label='Token owner address' 
               placeholder='Token owner address'  
               value={balanceOf.tokenOwnerAddress}
-              onChange={event =>{console.log(event);
-               this.setState(prevState => {
+              onChange={event => {
+                let value = event.target.value; 
+                this.setState(prevState => {
                 let balanceOf = Object.assign({}, prevState.balanceOf);
-                console.log(event);
-                
-                balanceOf.tokenOwnerAddress = event.target.value;             
+                balanceOf.tokenOwnerAddress = value;             
                 return { balanceOf };
               })}}
             />
