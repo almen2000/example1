@@ -8,4 +8,4 @@ For redeploying contract do following steps
 
     2. After compiling contract in the same directory type 'node deploy.js' and press ENTER
 
-    3. After deploying contract copy deployed contract address from terminal     and replace it in erc20.js file after 'JSON.parse(Altoken.interface)' 
+    3. After deploying contract copy deployed contract address from terminal  and replace it in erc20.js file after 'JSON.parse(Altoken.interface)' 
