@@ -1,6 +1,14 @@
 # This is an example page for testing ERC20 contract function calls
 
-For running project please go in terminal to project directory, type 'npm run dev' and press ENTER
+For running project do following steps
+    
+    1. Download or clone source code from github
+
+    2. Open terminal and go to the project file directory
+
+    3. Type 'npm install' and press ENTER 
+    
+    4. Type 'npm run dev' and press ENTER
 
 For redeploying contract do following steps
     
