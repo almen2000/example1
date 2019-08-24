@@ -4,7 +4,7 @@ const Altoken = require('./build/Altoken.json');
 
 const provider = new HDWalletProvider(
   'mnemonic phrase',
-  'https://rinkeby.infura.io/v3/*************************'
+  'https://rinkeby.infura.io/v3/*******************************'
 );
 const web3 = new Web3(provider);
 
