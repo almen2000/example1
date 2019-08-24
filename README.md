@@ -6,6 +6,8 @@ For redeploying contract do following steps
     
     1. Go to ethereum file directory in terminal and type 'node compile.js' and press ENTER
 
-    2. After compiling contract in the same directory type 'node deploy.js' and press ENTER
+    2. After compiling contract in the same directory you must add your parameters on deploy.js file(see below), type 'node deploy.js' and press ENTER
 
-    3. After deploying contract copy deployed contract address from terminal  and replace it in erc20.js file after 'JSON.parse(Altoken.interface)' 
+    3. After deploying contract copy deployed contract address from terminal, open erc20.js file and replace it after 'JSON.parse(Altoken.interface)' 
+
+For deploying contract from your address you should open deploy.js file and in HDWalletProvider pass as a first argument your mnemonic phrase from MetaMask and as a second argument rynkeby network address from infura.io
