@@ -49,6 +49,16 @@ class HomaPage extends Component {
     });
   };
 
+  changeState = (objectName, properties, values) => {
+    this.setState(prevState => {
+      const newObject = Object.assign({}, prevState[objectName]);
+      for (let i = 0; i < properties.length; i++) {
+        newObject[properties[i]] = values[i]; 
+      }          
+      return { [objectName]: newObject };
+    })
+  };
+
   getTokenName = () => {
     alert(`Your token name is ${this.state.tokenName}`);
   };
@@ -65,11 +75,7 @@ class HomaPage extends Component {
     event.preventDefault();
     const accounts = await web3.eth.getAccounts();
 
-    this.setState(prevState => {
-      let transferFrom = Object.assign({}, prevState.transferFrom);
-      transferFrom.loading = true;              
-      return { transferFrom };
-    });
+    this.changeState('transferFrom', ['loading'], [true]);
 
     try {
       await erc20.methods.transferFrom(
@@ -85,25 +91,14 @@ class HomaPage extends Component {
       alert(err.message);
     }
 
-    this.setState(prevState => {
-      let transferFrom = Object.assign({}, prevState.transferFrom);
-      transferFrom.addressFrom = '';
-      transferFrom.addressTo = '';
-      transferFrom.tokens = '';
-      transferFrom.loading = false;              
-      return { transferFrom };
-    });
+    this.changeState('transferFrom', ['loading', 'addressFrom', 'addressTo', 'tokens'], [false, '', '', '']);
   };
 
   submitTrnasfer = async (event) => {
     event.preventDefault();
     const accounts = await web3.eth.getAccounts();
 
-    this.setState(prevState => {
-      let transfer = Object.assign({}, prevState.transfer);
-      transfer.loading = true;              
-      return { transfer };
-    });
+    this.changeState('transfer', ['loading'], [true]);
 
     try {
       await erc20.methods.transfer(
@@ -118,25 +113,14 @@ class HomaPage extends Component {
       alert(err.message);
     }
 
-    this.setState(prevState => {
-      let transfer = Object.assign({}, prevState.transfer);
-      transfer.addressTo = '';
-      transfer.tokens = '';
-      transfer.loading = false;              
-      return { transfer };
-    });
+    this.changeState('transfer', ['loading', 'addressTo', 'tokens'], [false, '', '']);
   };
 
   submitApprove = async (event) => {
     event.preventDefault();
-    this.updateAccountAddress();
     const accounts = await web3.eth.getAccounts();
 
-    this.setState(prevState => {
-      let approve = Object.assign({}, prevState.approve);
-      approve.loading = true;              
-      return { approve };
-    });
+    this.changeState('approve', ['loading'], [true]);
 
     try {
       await erc20.methods.approve(
@@ -151,23 +135,13 @@ class HomaPage extends Component {
       alert(err.message);
     }
 
-    this.setState(prevState => {
-      let approve = Object.assign({}, prevState.approve);
-      approve.spenderAddress = '';
-      approve.tokens = '';
-      approve.loading = false;              
-      return { approve };
-    });
+    this.changeState('approve', ['loading', 'spenderAddress', 'tokens'], [false, '', '']);
   };
 
   submitAllowance = async (event) => {
     event.preventDefault();
 
-    this.setState(prevState => {
-      let allowance = Object.assign({}, prevState.allowance);
-      allowance.loading = true;              
-      return { allowance };
-    });
+    this.changeState('allowance', ['loading'], [true]);
 
     try {
       const allowedTokensCount = await erc20.methods.allowance(this.state.allowance.tokenOwnerAddress, this.state.allowance.spenderAddress).call();
@@ -177,24 +151,13 @@ class HomaPage extends Component {
       alert(err.message);
     };
 
-    this.setState(prevState => {
-      let allowance = Object.assign({}, prevState.allowance);
-      allowance.loading = false;
-      allowance.tokenOwnerAddress = '';
-      allowance.spenderAddress = '';              
-      return { allowance };
-    });
-
+    this.changeState('allowance', ['loading', 'tokenOwnerAddress', 'spenderAddress'], [false, '', '']);
   };
 
   submitBalanceOf = async (event) => {
     event.preventDefault();
 
-    this.setState(prevState => {
-      let balanceOf = Object.assign({}, prevState.balanceOf);
-      balanceOf.loading = true;             
-      return { balanceOf };
-    });
+    this.changeState('balanceOf', ['loading'], [true]);
 
     try {
       const balance = await erc20.methods.balanceOf(this.state.balanceOf.tokenOwnerAddress).call();
@@ -203,23 +166,13 @@ class HomaPage extends Component {
       alert(err.message);
     };
 
-    this.setState(prevState => {
-      let balanceOf = Object.assign({}, prevState.balanceOf);
-      balanceOf.loading = false;
-      balanceOf.tokenOwnerAddress = '';             
-      return { balanceOf };
-    });
-
+    this.changeState('balanceOf', ['loading', 'tokenOwnerAddress'], [false, '']);
   };
 
   submitTotalSupply = async (event) => {
     event.preventDefault();
 
-    this.setState(prevState => {
-      let totalSupply = Object.assign({}, prevState.totalSupply);
-      totalSupply.loading = true;
-      return { totalSupply };
-    });
+    this.changeState('totalSupply', ['loading'], [true]);
 
     try {
       const supply = await erc20.methods.totalSupply().call();
@@ -228,11 +181,7 @@ class HomaPage extends Component {
       alert(err.message);
     };
 
-    this.setState(prevState => {
-      let totalSupply = Object.assign({}, prevState.totalSupply);
-      totalSupply.loading = false;
-      return { totalSupply };
-    })
+    this.changeState('totalSupply', ['loading'], [false]);
   };
 
   render() {
@@ -252,156 +201,96 @@ class HomaPage extends Component {
 
         <Form onSubmit={this.submitTransferFrom}>
           <Form.Group>
-            <Form.Button label='Click for submit' content='TrnasferFrom()' secondary loading={transferFrom.loading} />
+            <Form.Button label='Click for submit' content='TrnasferFrom()' secondary loading={transferFrom.loading} disabled={transferFrom.loading} />
             <Form.Input 
               label='Address From' 
               placeholder='Address From'
               value={transferFrom.addressFrom}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let transferFrom = Object.assign({}, prevState.transferFrom);
-                transferFrom.addressFrom = value;        
-                return { transferFrom };
-              })}}
+              onChange={event => this.changeState('transferFrom', ['addressFrom'], [event.target.value])}
             />
             <Form.Input 
               label='Address to' 
               placeholder='Address to'
               value={transferFrom.addressTo}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let transferFrom = Object.assign({}, prevState.transferFrom);
-                transferFrom.addressTo = value;        
-                return { transferFrom };
-              })}} 
+              onChange={event => this.changeState('transferFrom', ['addressTo'], [event.target.value])}
             />
             <Form.Input 
               label='Tokens' 
               placeholder='Tokens'
               value={transferFrom.tokens}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let transferFrom = Object.assign({}, prevState.transferFrom);
-                transferFrom.tokens = value;        
-                return { transferFrom };
-              })}} 
+              onChange={event => this.changeState('transferFrom', ['tokens'], [event.target.value])}
             />
           </Form.Group>
         </Form>
 
         <Form onSubmit={this.submitTrnasfer}>
           <Form.Group>
-            <Form.Button label='Click for submit' content='Transfer()' secondary loading={transfer.loading} />
+            <Form.Button label='Click for submit' content='Transfer()' secondary loading={transfer.loading} disabled={transfer.loading} />
             <Form.Input 
               label='Address to' 
               placeholder='Address to'
               value={transfer.addressTo} 
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let transfer = Object.assign({}, prevState.transfer);
-                transfer.addressTo = value;        
-                return { transfer };
-              })}}
+              onChange={event => this.changeState('transfer', ['addressTo'], [event.target.value])}
             />
             <Form.Input 
               label='Tokens' 
               placeholder='Tokens' 
               value={transfer.tokens}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let transfer = Object.assign({}, prevState.transfer);
-                transfer.tokens = value;        
-                return { transfer };
-              })}} 
+              onChange={event => this.changeState('transfer', ['tokens'], [event.target.value])}
             />
           </Form.Group>
         </Form>
 
         <Form onSubmit={this.submitApprove}>
           <Form.Group>
-            <Form.Button label='Click for submit' content='Approve()' secondary loading={approve.loading} />
+            <Form.Button label='Click for submit' content='Approve()' secondary loading={approve.loading} disabled={approve.loading} />
             <Form.Input 
               label='Spender address' 
               placeholder='Spender address'
               value={approve.spenderAddress} 
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let approve = Object.assign({}, prevState.approve);
-                approve.spenderAddress = value;        
-                return { approve };
-              })}}
+              onChange={event => this.changeState('approve', ['spenderAddress'], [event.target.value])}
             />
             <Form.Input 
               label='Tokens' 
               placeholder='Tokens'
               value={approve.tokens}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let approve = Object.assign({}, prevState.approve);
-                approve.tokens = value;        
-                return { approve };
-              })}}  
+              onChange={event => this.changeState('approve', ['tokens'], [event.target.value])}
             />
           </Form.Group>
         </Form>
 
         <Form onSubmit={this.submitAllowance}>
           <Form.Group>
-            <Form.Button label='Click for submit' content='Allowance()' primary loading={allowance.loading} />
+            <Form.Button label='Click for submit' content='Allowance()' primary loading={allowance.loading} disabled={allowance.loading} />
             <Form.Input
               label='Token owner address' 
               placeholder='Token owner address'  
               value={allowance.tokenOwnerAddress}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let allowance = Object.assign({}, prevState.allowance);
-                allowance.tokenOwnerAddress = value;        
-                return { allowance };
-              })}} 
+              onChange={event => this.changeState('allowance', ['tokenOwnerAddress'], [event.target.value])}
             />
             <Form.Input 
               label='Spender address' 
               placeholder='Spender address' 
               value={allowance.spenderAddress}
-              onChange={event => {
-                let value = event.target.value;
-                this.setState(prevState => {
-                let allowance = Object.assign({}, prevState.allowance);
-                allowance.spenderAddress = value;              
-                return { allowance };
-              })}}
+              onChange={event => this.changeState('allowance', ['spenderAddress'], [event.target.value])}
             />
           </Form.Group>
         </Form>
 
         <Form onSubmit={this.submitBalanceOf}>
           <Form.Group>
-            <Form.Button label='Click for submit' content='BalanceOf()' primary loading={balanceOf.loading} />
+            <Form.Button label='Click for submit' content='BalanceOf()' primary loading={balanceOf.loading} disabled={balanceOf.loading} />
             <Form.Input
               label='Token owner address' 
               placeholder='Token owner address'  
               value={balanceOf.tokenOwnerAddress}
-              onChange={event => {
-                let value = event.target.value; 
-                this.setState(prevState => {
-                let balanceOf = Object.assign({}, prevState.balanceOf);
-                balanceOf.tokenOwnerAddress = value;             
-                return { balanceOf };
-              })}}
+              onChange={event => this.changeState('balanceOf', ['tokenOwnerAddress'], [event.target.value])}
             />
           </Form.Group>
         </Form>
 
         <Form onSubmit={this.submitTotalSupply}>
-          <Form.Button label='Click for submit' content='TotalSupply()' primary loading={totalSupply.loading} />
+          <Form.Button label='Click for submit' content='TotalSupply()' primary loading={totalSupply.loading} disabled={totalSupply.loading} />
         </Form>
 
       </Layout>
